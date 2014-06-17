@@ -1,5 +1,7 @@
 package org.fsm;
 
+import org.fsm.model.FSMTransition;
+
 /**
  * Created by IntelliJ IDEA.
  * User: aathalye
@@ -9,5 +11,5 @@ package org.fsm;
  */
 public class FSMBuilder {
 
-
+//    public FSMTransition buildTransition
 }

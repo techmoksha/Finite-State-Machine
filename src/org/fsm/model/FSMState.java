@@ -9,7 +9,23 @@ package org.fsm.model;
  */
 public interface FSMState {
 
-    public void onEntry();
+    public String getName();
 
-    public void onExit();
+    /**
+     *
+     * A callback where any actions may be performed once the state machine
+     * enters this state.
+     * @param concept : The actual object on which this FSM is attached.
+     * @param event : The event causing state change into this state.
+     */
+    public void onEntry(FSMConcept concept, FSMEvent event);
+
+    /**
+     *
+     * A callback where any actions may be performed once the state machine
+     * enters this state.
+     * @param concept : The actual object on which this FSM is attached.
+     * @param event : The event causing state change to another state.
+     */
+    public void onExit(FSMConcept concept, FSMEvent event);
 }

@@ -8,4 +8,19 @@ package org.fsm.model;
  * To change this template use File | Settings | File Templates.
  */
 public interface FSMTransition {
+
+    /**
+     *
+     * The transition From state. Will be null for start state
+     *
+     */
+    public FSMState getFrom();
+
+    /**
+     *
+     * Transition To State. Will be null for end state
+     * and will be same as from state for self transition.
+     */
+    public FSMState getTo();
+
 }
