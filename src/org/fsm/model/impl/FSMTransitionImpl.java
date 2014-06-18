@@ -1,5 +1,6 @@
 package org.fsm.model.impl;
 
+import org.fsm.model.FSMEvent;
 import org.fsm.model.FSMState;
 import org.fsm.model.FSMTransition;
 
@@ -16,6 +17,14 @@ public class FSMTransitionImpl implements FSMTransition {
 
     private FSMState toState;
 
+    private Class<?> triggerEventClass;
+
+    public FSMTransitionImpl(FSMState fromState, FSMState toState, Class<?> triggerEventClass) {
+        this.fromState = fromState;
+        this.toState = toState;
+        this.triggerEventClass = triggerEventClass;
+    }
+
     @Override
     public FSMState getFrom() {
         return fromState;
@@ -26,5 +35,25 @@ public class FSMTransitionImpl implements FSMTransition {
         return toState;
     }
 
+    public Class<?> getTriggerEventClass() {
+        return triggerEventClass;
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        FSMTransitionImpl that = (FSMTransitionImpl) o;
+
+        return fromState.equals(that.fromState) && toState.equals(that.toState) && triggerEventClass.equals(that.triggerEventClass);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = fromState.hashCode();
+        result = 31 * result + toState.hashCode();
+        result = 31 * result + triggerEventClass.hashCode();
+        return result;
+    }
 }

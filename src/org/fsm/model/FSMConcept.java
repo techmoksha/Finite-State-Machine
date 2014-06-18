@@ -1,5 +1,7 @@
 package org.fsm.model;
 
+import org.fsm.FSMStateMachine;
+
 /**
  * Created by IntelliJ IDEA.
  * User: aathalye
@@ -19,4 +21,10 @@ public interface FSMConcept {
     public Object getProperty(String property);
 
     public void addProperty(String name, Object value);
+
+    /**
+     * TODO Attach multiple SMS?
+     *
+     */
+    public void attachStateMachine(FSMStateMachine stateMachine);
 }

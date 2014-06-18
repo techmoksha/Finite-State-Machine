@@ -1,5 +1,6 @@
 package org.fsm.internal;
 
+import org.fsm.model.FSMState;
 import org.fsm.model.FSMTransition;
 
 /**
@@ -9,15 +10,31 @@ import org.fsm.model.FSMTransition;
  * Time: 7:18 PM
  * To change this template use File | Settings | File Templates.
  */
-public class FSMTransitionEdge {
+class FSMTransitionEdge {
 
     private FSMTransition wrappedTransition;
 
-    public FSMTransitionEdge(FSMTransition wrappedTransition) {
+    FSMTransitionEdge(FSMTransition wrappedTransition) {
         this.wrappedTransition = wrappedTransition;
     }
 
-    public FSMTransition getWrappedTransition() {
+    FSMTransition getWrappedTransition() {
         return wrappedTransition;
+    }
+
+    FSMState getFromState() {
+        return wrappedTransition.getFrom();
+    }
+
+    FSMState getToState() {
+        return wrappedTransition.getTo();
+    }
+
+    boolean matchesTriggerEventClass(Class<?> triggerEventClass) {
+        return wrappedTransition.getTriggerEventClass().equals(triggerEventClass);
+    }
+
+    boolean matchesTriggerEventClass(FSMTransitionEdge anotherTransitionEdge) {
+        return wrappedTransition.getTriggerEventClass().equals(anotherTransitionEdge.wrappedTransition.getTriggerEventClass());
     }
 }

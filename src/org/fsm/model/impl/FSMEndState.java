@@ -14,7 +14,7 @@ import org.fsm.model.FSMEvent;
 public final class FSMEndState extends AbstractFSMState {
 
     public FSMEndState() {
-        super("_End");
+        super("_End_");
     }
 
     @Override

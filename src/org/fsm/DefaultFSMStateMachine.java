@@ -1,6 +1,10 @@
 package org.fsm;
 
+import org.fsm.event.FSMEventListener;
+import org.fsm.event.FSMEventRegistry;
 import org.fsm.internal.FSMStateGraph;
+import org.fsm.model.FSMConcept;
+import org.fsm.model.FSMEvent;
 import org.fsm.model.FSMState;
 import org.fsm.model.FSMTransition;
 import org.fsm.model.impl.FSMEndState;
@@ -14,17 +18,40 @@ import org.fsm.model.impl.FSMStartState;
  * <p/>
  * Default implementation of a state machine.
  */
-public class DefaultFSMStateMachine implements FSMStateMachine {
+public class DefaultFSMStateMachine implements FSMStateMachine, FSMEventListener {
+
+    /**
+     * The concept for which this state machine runs.
+     */
+    private FSMConcept concept;
 
     private FSMStateGraph stateGraph;
 
-    protected DefaultFSMStateMachine() {
+    /**
+     * This keeps track of current state this machine is in.
+     */
+    private FSMState currentState;
+
+    public DefaultFSMStateMachine(FSMConcept concept) {
+        this.concept = concept;
+        initialize();
+    }
+
+    /**
+     * Subclasses are not expected to override this since
+     * it may change the way the FSM is constructed.
+     */
+    void initialize() {
         //Initialize start and end state
         FSMStartState startState = new FSMStartState();
         FSMEndState endState = new FSMEndState();
         stateGraph = new FSMStateGraph();
         stateGraph.addState(startState);
         stateGraph.addState(endState);
+        //Current state to start
+        currentState = startState;
+
+        FSMEventRegistry.INSTANCE.addEventListener(this);
     }
 
     @Override
@@ -62,5 +89,41 @@ public class DefaultFSMStateMachine implements FSMStateMachine {
         }
         stateGraph.addOutgoingTransition(transition);
         return this;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <S extends FSMState> FSMStateMachine addStates(S... states) {
+        for (S state : states) {
+            addState(state);
+        }
+        return this;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends FSMTransition> FSMStateMachine addOutgoingTransitions(T... transitions) {
+        for (T transition : transitions) {
+            addOutgoingTransition(transition);
+        }
+        return this;
+    }
+
+    @Override
+    public FSMState getCurrentState() {
+        return currentState;
+    }
+
+    @Override
+    public <E extends FSMEvent<?>> void onAssert(E fsmEvent) {
+        FSMState nextState = stateGraph.getNextState(currentState, fsmEvent);
+        if (nextState != null) {
+            FSMState previousState = currentState;
+            //Make this next state current
+            currentState = nextState;
+            //Execute exit action of previous state and entry of next state
+            previousState.onExit(concept, fsmEvent);
+            currentState.onEntry(concept, fsmEvent);
+        }
     }
 }

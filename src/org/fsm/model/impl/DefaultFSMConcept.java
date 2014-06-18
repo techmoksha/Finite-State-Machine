@@ -32,11 +32,6 @@ public class DefaultFSMConcept implements FSMConcept {
         properties = new Properties();
     }
 
-    public DefaultFSMConcept(String id, FSMStateMachine stateMachine) {
-        this.id = id;
-        this.stateMachine = stateMachine;
-    }
-
     public String getId() {
         return id;
     }
@@ -55,5 +50,9 @@ public class DefaultFSMConcept implements FSMConcept {
             throw new IllegalArgumentException("Property name cannot be null");
         }
         properties.put(name, value);
+    }
+
+    public void attachStateMachine(FSMStateMachine stateMachine) {
+        this.stateMachine = stateMachine;
     }
 }

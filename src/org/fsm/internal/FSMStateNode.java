@@ -2,6 +2,8 @@ package org.fsm.internal;
 
 import org.fsm.model.FSMState;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,7 +14,7 @@ import java.util.Set;
  * Time: 7:18 PM
  * To change this template use File | Settings | File Templates.
  */
-public class FSMStateNode {
+class FSMStateNode {
 
     private FSMState wrappedState;
 
@@ -21,17 +23,28 @@ public class FSMStateNode {
      */
     private Set<FSMTransitionEdge> outgoingTransitionEdges;
 
-    public FSMStateNode(FSMState wrappedState) {
+    FSMStateNode(FSMState wrappedState) {
         this.wrappedState = wrappedState;
-        this.outgoingTransitionEdges = new HashSet<FSMTransitionEdge>();
+        this.outgoingTransitionEdges = new HashSet<>();
     }
 
-    public boolean addOutgoingEdge(FSMTransitionEdge fsmTransitionEdge) {
+    boolean addOutgoingEdge(FSMTransitionEdge fsmTransitionEdge) {
+        //Same type of transition (triggering event class is same) is not allowed since it creates
+        //conflicting situation.
+        for (FSMTransitionEdge outgoingTransitionEdge : outgoingTransitionEdges) {
+            if (outgoingTransitionEdge.matchesTriggerEventClass(fsmTransitionEdge)) {
+                throw new IllegalArgumentException("Transition with this event type already exists");
+            }
+        }
         return outgoingTransitionEdges.add(fsmTransitionEdge);
     }
 
-    public FSMState getWrappedState() {
+    FSMState getWrappedState() {
         return wrappedState;
+    }
+
+    Collection<FSMTransitionEdge> getOutgoingEdges() {
+        return Collections.unmodifiableCollection(outgoingTransitionEdges);
     }
 
     @Override

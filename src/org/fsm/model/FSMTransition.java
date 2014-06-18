@@ -23,4 +23,14 @@ public interface FSMTransition {
      */
     public FSMState getTo();
 
+    /**
+     * Every transition depicts a relation which is
+     * captured by the event that triggered it.
+     * <p>
+     *     Here the class of that event is used to
+     *     depict the named relation.
+     * </p>
+     * @see org.fsm.model.FSMEvent
+     */
+    public Class<?> getTriggerEventClass();
 }
